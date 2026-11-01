@@ -1,54 +1,61 @@
- export default async function handler(req, res) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+ // api/manabadi-clone.js
 
-  const { ht, dob, board, year, mode } = req.query;
-  if (!ht || !board || !year) {
-    return res.status(400).send('<p class="text-red-600 font-bold p-4 text-center">Error: Required parameters missing.</p>');
-  }
+export default async function handler(req, res) {
+    // CORS పర్మిషన్స్ సెట్ చేయడం
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  res.setHeader('Content-Type', 'text/html');
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
 
-  // Dynamic Year Calculation & Formatting
-  const examYear = year || "2026";
+    const { htno } = req.query;
 
-  if (mode === 'admit_cards') {
-    return res.status(200).send(`
-      <div class="space-y-3">
-        <div class="bg-blue-50 border border-blue-200 p-3 rounded">
-          <h4 class="font-black text-blue-900 text-xs mb-1 uppercase">EXAMINATION HALL TICKET - ${examYear} ACADEMIC SESSION</h4>
-          <p class="text-[10px] text-slate-700">Candidate with Hall Ticket Number <b>${ht.toUpperCase()}</b> is provisionally permitted to appear for the <b>${board}</b> examinations for the year ${examYear}.</p>
-        </div>
-        <div class="grid grid-cols-2 gap-2 text-[10px] font-semibold border border-slate-300 p-2 rounded bg-slate-50">
-          <div>Center Code: <span class="font-bold text-black">42018 - GOVT JR COLLEGE</span></div>
-          <div>Medium: <span class="font-bold text-black">ENGLISH / TELUGU</span></div>
-          <div>Exam Timing: <span class="font-bold text-black">09:00 AM - 12:00 PM</span></div>
-          <div>Admit Status: <span class="font-bold text-emerald-700">VERIFIED & ISSUED (${examYear})</span></div>
-        </div>
-      </div>
-    `);
-  } else {
-    // Dynamic marks generation matching the requested exam year
-    const mockStudentData = [
-      { code: "01", name: `ENGLISH PAPER-I (${examYear} SESSION)`, max: 100, sec: 94, grade: "A1" },
-      { code: "02", name: "SECOND LANGUAGE (TELUGU)", max: 100, sec: 97, grade: "A1" },
-      { code: "03", name: "MATHEMATICS PAPER-1A", max: 75, sec: 73, grade: "A1" },
-      { code: "04", name: "MATHEMATICS PAPER-1B", max: 75, sec: 72, grade: "A1" },
-      { code: "05", name: "PHYSICS (THEORY & LAB)", max: 60, sec: 56, grade: "A1" },
-      { code: "06", name: "CHEMISTRY (THEORY & LAB)", max: 60, sec: 58, grade: "A1" }
-    ];
+    if (!htno) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Hall Ticket Number (htno) is required!" 
+        });
+    }
 
-    let rowsHtml = `<div class="overflow-x-auto"><table class="w-full text-[10px] text-left border-collapse border border-slate-400"><thead><tr class="bg-blue-950 text-white text-center font-bold"><th class="border border-slate-400 p-1.5 w-12">CODE</th><th class="border border-slate-400 p-1.5 text-left">SUBJECT NAME (${examYear})</th><th class="border border-slate-400 p-1.5 w-20">MAX</th><th class="border border-slate-400 p-1.5 w-24">SECURED</th><th class="border border-slate-400 p-1.5 w-16">GRADE</th></tr></thead><tbody class="font-semibold text-center">`;
-    let totalMax = 0, totalSecured = 0;
+    try {
+        // ఇక్కడ నువ్వు నీ ఒరిజినల్ డేటాబేస్ (Firebase / JSON) నుంచి ఆ హాల్ టికెట్ డేటాని వెతకాలి.
+        // మనాబడి లాగే డేటాని ఫిల్టర్ చేసి JSON రూపంలో పంపుతుంది:
 
-    mockStudentData.forEach((s, idx) => {
-      const bg = idx % 2 === 1 ? 'bg-slate-50' : '';
-      totalMax += s.max; totalSecured += s.sec;
-      rowsHtml += `<tr class="${bg} border-b border-slate-300"><td class="border border-slate-400 p-1.5 font-bold">${s.code}</td><td class="border border-slate-400 p-1.5 text-left font-bold">${s.name}</td><td class="border border-slate-400 p-1.5">${s.max}</td><td class="border border-slate-400 p-1.5 font-bold">${s.sec}</td><td class="border border-slate-400 p-1.5 text-emerald-700 font-bold">${s.grade}</td></tr>`;
-    });
+        // మాక్ డేటా (దీని బదులు నీ దగ్గర ఉన్న స్టూడెంట్స్ లిస్ట్ లేదా డేటాబేస్ పెట్టుకోవచ్చు)
+        const mockDatabase = [
+            { htno: "240425401", name: "Gowri Sankar", memoNo: "AP2026MEMO01", total: "540", status: "PASS", college: "SGS Arts College" },
+            { htno: "240425402", name: "Student Two", memoNo: "AP2026MEMO02", total: "480", status: "PASS", college: "SGS Arts College" }
+        ];
 
-    rowsHtml += `<tr class="bg-slate-200 font-bold"><td colspan="2" class="border border-slate-400 p-1.5 text-right">TOTAL MARKS (${examYear}):</td><td class="border border-slate-400 p-1.5">${totalMax}</td><td class="border border-slate-400 p-1.5 text-blue-900 font-black">${totalSecured}</td><td class="border border-slate-400 p-1.5 text-emerald-800">PASSED</td></tr></tbody></table></div>`;
-    return res.status(200).send(rowsHtml);
-  }
+        const student = mockDatabase.find(s => s.htno === htno);
+
+        if (student) {
+            return res.status(200).json({
+                success: true,
+                source: "Manabadi-Clone API Engine",
+                data: {
+                    hallTicketNo: student.htno,
+                    studentName: student.name,
+                    memoNumber: student.memoNo,
+                    totalMarks: student.total,
+                    resultStatus: student.status,
+                    institution: student.college
+                }
+            });
+        } else {
+            return res.status(404).json({
+                success: false,
+                message: "Entered Hall Ticket Number not found in records."
+            });
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: "Internal Server Error",
+            details: error.message
+        });
+    }
 }
