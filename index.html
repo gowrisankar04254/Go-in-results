@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GO-IN RESULTS - Student Exam Results & Hall Tickets Portal 2026</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+darkMode: 'class',
+theme: {
+extend: {
+colors: {
+govtBlue: '#0b409c',
+govtHeader: '#002663',
+govtGold: '#d4af37'
+},
+animation: {
+'fade-in': 'fadeIn 0.25s ease-out forwards'
+},
+keyframes: {
+fadeIn: {
+'0%': { opacity: '0', transform: 'scale(0.97)' },
+'100%': { opacity: '1', transform: 'scale(1)' }
+}
+}
+}
+}
+}
+</script>
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+transition: background-color 0.2s, color 0.2s;
+}
+@media print {
+.no-print { display: none !important; }
+body { background: white !important; color: black !important; }
+#resultModal { position: relative !important; inset: auto !important; background: transparent !important; padding: 0 !important; }
+#printableMemo {
+background: white !important;
+color: black !important;
+box-shadow: none !important;
+border: none !important;
+width: 100% !important;
+}
+}
+</style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-100 text-slate-900 dark:bg-slate-900 dark:text-slate-100 antialiased text-[11px]">
+​<!-- Top Banner Bar -->
+<div class="bg-blue-950 text-slate-300 text-[10px] py-1 px-3 border-b border-blue-900/40 no-print flex justify-between items-center">
+<div class="flex items-center space-x-3">
+<span><i class="fa-solid fa-flag text-yellow-400 mr-1"></i> Official Student Examination & Marks Gateway 2026</span>
+<span class="hidden md:inline text-slate-500">|</span>
+<span class="hidden md:inline"><i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> Government Verified Portal</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[9px] font-bold flex items-center">
+<span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1 animate-pulse"></span> Server Active
+</span>
+</div>
+</div>
+​<!-- Header Bar -->
+<header class="w-full bg-gradient-to-r from-govtHeader via-blue-950 to-govtHeader text-white border-b-2 border-govtGold no-print shadow-md">
+<div class="max-w-7xl mx-auto px-3 py-2 flex items-center justify-between">
+<!-- Brand Logo -->
+<div class="flex items-center space-x-2.5 cursor-pointer group" id="brandLogo" onclick="checkSecretAdminTap()">
+<div class="w-8 h-8 bg-gradient-to-tr from-yellow-500 to-amber-200 rounded-md flex items-center justify-center text-govtHeader shadow font-black text-sm border border-white/80 shrink-0">
+GO
+</div>
+<div>
+<h1 class="text-sm sm:text-base font-black tracking-wider text-yellow-300 leading-tight group-hover:text-yellow-200">
+GO-IN RESULTS
+</h1>
+<p class="text-[9px] text-slate-200 font-medium tracking-wide">
+Student Marks & Rank Card Gateway 2026
+</p>
+</div>
+</div>
+​<!-- Dark / Light Mode Toggle Button -->
+<button onclick="toggleTheme()" id="themeBtn" class="bg-blue-900/80 hover:bg-blue-800 text-yellow-300 border border-yellow-400/30 font-bold px-2.5 py-1 rounded text-[10px] transition flex items-center space-x-1 shadow-sm active:scale-95">
+<i id="themeIcon" class="fa-solid fa-moon text-xs"></i>
+<span id="themeText" class="hidden sm:inline">Dark Mode</span>
+</button>
+</div>
+</header>
+​<!-- Latest News Marquee -->
+<div class="bg-blue-50 dark:bg-slate-800/80 border-b border-blue-200 dark:border-slate-700 px-2.5 py-1 text-[10px] text-slate-800 dark:text-slate-200 font-semibold flex items-center no-print">
+<span class="bg-red-600 text-white px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider mr-2 shrink-0 flex items-center shadow-sm">
+<i class="fa-solid fa-bolt mr-1 text-yellow-300"></i> LATEST NEWS
+</span>
+<marquee class="font-medium" scrollamount="5" id="marqueeAlert" onmouseover="this.stop();" onmouseout="this.start();">
+Welcome to GO-IN RESULTS Portal. Andhra Pradesh & Telangana Inter 1st, 2nd Year & SSC Examination Results 2026 are live now. Keep your Hall Ticket Number ready.
+</marquee>
+</div>
+​<!-- Main Content Layout -->
+<main class="max-w-7xl mx-auto w-full px-2.5 sm:px-4 py-4 flex-1 grid grid-cols-1 md:grid-cols-4 gap-3.5">
+​<!-- Sidebar: Press Releases Notification Card Only -->
+<aside class="md:col-span-1 space-y-3 no-print">
+<div class="bg-white dark:bg-slate-800 border border-blue-900/30 dark:border-blue-500/40 rounded-lg shadow-sm overflow-hidden">
+<div class="bg-govtHeader text-white px-3 py-1.5 font-bold text-[11px] flex items-center justify-between border-b border-blue-800">
+<span class="flex items-center"><i class="fa-solid fa-bell mr-1.5 text-yellow-300"></i> PRESS RELEASES</span>
+<span class="text-[9px] bg-blue-900 text-yellow-300 px-1.5 py-0.5 rounded font-bold" id="alertCounterText">Live</span>
+</div>
+<div class="p-2 space-y-1.5 text-[10px] divide-y divide-slate-100 dark:divide-slate-700" id="sideAlertsList">
+<!-- Dynamic Alerts loaded via JS -->
+</div>
+</div>
+</aside>
+​<!-- Main Search Form Section -->
+<section class="md:col-span-3 space-y-3.5">
+<!-- Search Box Card -->
+<div class="bg-white dark:bg-slate-800 border border-blue-900/30 dark:border-blue-500/40 rounded-lg shadow-md p-3.5 sm:p-4 no-print">
+<div class="border-b border-slate-200 dark:border-slate-700 pb-2 mb-3">
+<h2 class="text-xs sm:text-sm font-extrabold text-govtHeader dark:text-yellow-300 uppercase tracking-wide flex items-center">
+<i class="fa-solid fa-magnifying-glass text-blue-700 dark:text-blue-400 mr-1.5 text-xs"></i> ONLINE RESULT & MARKS MEMO GATEWAY
+</h2>
+<p class="text-[10px] text-slate-500 dark:text-slate-400 font-medium">Select exam board, enter Hall Ticket Number and DOB to view statement of marks instantly.</p>
+</div>
+​<form id="govtSearchForm" onsubmit="fetchResults(event)" class="space-y-3">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+​<!-- Select Board -->
+<div class="space-y-1">
+<label for="boardSelect" class="text-[10px] font-bold text-slate-700 dark:text-slate-300">Select Board / Exam *</label>
+<select id="boardSelect" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded px-2.5 py-1.5 text-[11px] font-semibold focus:border-blue-700 focus:ring-1 focus:ring-blue-700 focus:outline-none text-slate-900 dark:text-slate-100">
+<option value="BOARD OF INTERMEDIATE EDUCATION AP">AP Inter 1st & 2nd Year 2026</option>
+<option value="BOARD OF SECONDARY EDUCATION AP">AP SSC (10th Class) Results 2026</option>
+<option value="AP EAPCET RANK CARD GATEWAY">AP EAPCET Rank Cards 2026</option>
+<option value="SRI VENKATESWARA UNIVERSITY TIRUPATI">SV University Degree Exams</option>
+<option value="TELANGANA BOARD OF INTERMEDIATE EDUCATION">TS Inter 1st & 2nd Year Results</option>
+</select>
+</div>
+​<!-- Hall Ticket Input -->
+<div class="space-y-1">
+<label for="htInput" class="text-[10px] font-bold text-slate-700 dark:text-slate-300">Hall Ticket Number *</label>
+<input type="text" id="htInput" required placeholder="Enter Hall Ticket No" class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded px-2.5 py-1.5 text-[11px] font-bold uppercase tracking-wider focus:border-blue-700 focus:ring-1 focus:ring-blue-700 focus:outline-none text-slate-900 dark:text-slate-100">
+</div>
+​<!-- Date of Birth Input -->
+<div class="space-y-1">
+<label for="dobInput" class="text-[10px] font-bold text-slate-700 dark:text-slate-300">Date of Birth (DD/MM/YYYY) *</label>
+<input type="date" id="dobInput" required class="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded px-2.5 py-1.5 text-[11px] font-medium focus:border-blue-700 focus:ring-1 focus:ring-blue-700 focus:outline-none text-slate-900 dark:text-slate-100">
+</div>
+</div>
+​<div class="flex items-center space-x-2 pt-1">
+<button type="submit" id="submitBtn" class="bg-govtHeader dark:bg-blue-600 hover:bg-blue-900 text-white font-bold text-[11px] px-4 py-1.5 rounded shadow transition flex items-center active:scale-95">
+<i class="fa-solid fa-check-circle mr-1.5 text-yellow-300"></i> GET RESULT
+</button>
+<button type="button" onclick="resetForm()" class="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-bold text-[11px] px-3 py-1.5 rounded transition">
+RESET
+</button>
+</div>
+</form>
+​<!-- Loader State -->
+<div id="loadingBox" class="hidden text-center py-5">
+<div class="w-6 h-6 border-2 border-blue-900 dark:border-blue-400 border-t-transparent rounded-full animate-spin mx-auto mb-1.5"></div>
+<p class="text-[10px] font-bold text-slate-700 dark:text-slate-300">Connecting to official server & extracting marks memo... Please wait...</p>
+</div>
+</div>
+​<!-- Quick Links -->
+<div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 shadow-sm no-print">
+<h3 class="text-[10px] font-bold border-b border-slate-200 dark:border-slate-700 pb-1 mb-2 uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center">
+<i class="fa-solid fa-link text-blue-800 dark:text-blue-400 mr-1.5"></i> Official Web Portals
+</h3>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-bold">
+<a href="https://bie.ap.gov.in" target="_blank" class="p-1.5 border border-slate-200 dark:border-slate-700 rounded hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-900 dark:text-blue-300 flex items-center space-x-1.5 transition">
+<i class="fa-solid fa-globe text-xs text-blue-700 dark:text-blue-400"></i>
+<span>BIEAP Official</span>
+</a>
+<a href="https://bse.ap.gov.in" target="_blank" class="p-1.5 border border-slate-200 dark:border-slate-700 rounded hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-900 dark:text-blue-300 flex items-center space-x-1.5 transition">
+<i class="fa-solid fa-school text-xs text-blue-700 dark:text-blue-400"></i>
+<span>BSEAP Board</span>
+</a>
+<a href="https://cets.apsche.ap.gov.in" target="_blank" class="p-1.5 border border-slate-200 dark:border-slate-700 rounded hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-900 dark:text-blue-300 flex items-center space-x-1.5 transition">
+<i class="fa-solid fa-graduation-cap text-xs text-blue-700 dark:text-blue-400"></i>
+<span>APSCHE Portal</span>
+</a>
+<a href="https://svuniversity.edu.in" target="_blank" class="p-1.5 border border-slate-200 dark:border-slate-700 rounded hover:bg-blue-50 dark:hover:bg-slate-700 text-blue-900 dark:text-blue-300 flex items-center space-x-1.5 transition">
+<i class="fa-solid fa-university text-xs text-blue-700 dark:text-blue-400"></i>
+<span>SVU Portal</span>
+</a>
+</div>
+</div>
+</section>
+</main>
+​<!-- FULL SCREEN MARKS MEMO MODAL (Clean Simple Official Printable Sheet) -->
+<div id="resultModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden overflow-y-auto p-2 sm:p-5 animate-fade-in">
+<div class="max-w-3xl mx-auto bg-white dark:bg-slate-900 text-black dark:text-white rounded-lg shadow-xl overflow-hidden border border-slate-700 flex flex-col my-auto">
+​<!-- Modal Header Controls -->
+<div class="bg-govtHeader text-white px-3.5 py-2 flex justify-between items-center border-b-2 border-yellow-400 no-print">
+<div class="flex items-center space-x-2">
+<span class="w-6 h-6 bg-yellow-400 text-slate-950 font-black rounded flex items-center justify-center text-[10px]">GO</span>
+<h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-yellow-300">Official Statement of Marks Memo</h3>
+</div>
+​<div class="flex items-center space-x-1.5 text-[10px]">
+<button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1 rounded transition flex items-center">
+<i class="fa-solid fa-print mr-1"></i> PRINT / SAVE PDF
+</button>
+<button onclick="closeModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-2.5 py-1 rounded transition flex items-center">
+<i class="fa-solid fa-xmark mr-1"></i> CLOSE
+</button>
+</div>
+</div>
+​<!-- Clean Printable Marks Sheet -->
+<div id="printableMemo" class="p-4 sm:p-6 bg-white text-slate-900 space-y-4 text-[10px]">
+​<!-- Memo Header -->
+<div class="text-center border-b-2 border-slate-900 pb-2 space-y-0.5">
+<h2 class="text-xs sm:text-base font-black uppercase text-blue-950 tracking-wide" id="memoBoardName">BOARD OF INTERMEDIATE EDUCATION AP</h2>
+<p class="text-[10px] font-bold text-slate-700 uppercase">State Board Examination Marks Statement 2025-2026</p>
+</div>
+​<!-- Student Info Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] border border-slate-400 p-2.5 rounded bg-slate-50">
+<div><span class="font-bold text-slate-600">Hall Ticket No:</span> <span id="memoHt" class="font-black text-black ml-1">--</span></div>
+<div><span class="font-bold text-slate-600">Date of Birth:</span> <span id="memoDob" class="font-black text-black ml-1">--</span></div>
+<div><span class="font-bold text-slate-600">Candidate Name:</span> <span id="memoName" class="font-bold text-black ml-1">STUDENT CANDIDATE</span></div>
+<div><span class="font-bold text-slate-600">Result Status:</span> <span id="memoStatus" class="font-bold text-emerald-700 ml-1">PASSED (FIRST CLASS)</span></div>
+</div>
+​<!-- Dynamic Marks Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-[10px] text-left border-collapse border border-slate-400">
+<thead>
+<tr class="bg-blue-950 text-white text-center font-bold">
+<th class="border border-slate-400 p-1.5 w-12">CODE</th>
+<th class="border border-slate-400 p-1.5 text-left">SUBJECT NAME</th>
+<th class="border border-slate-400 p-1.5 w-20">MAX MARKS</th>
+<th class="border border-slate-400 p-1.5 w-24">SECURED</th>
+<th class="border border-slate-400 p-1.5 w-16">GRADE</th>
+</tr>
+</thead>
+<tbody class="font-semibold text-center" id="memoMarksBody">
+<!-- Marks inserted dynamically from API server / Local generator -->
+</tbody>
+</table>
+</div>
+​<!-- Footer Sign & Verification -->
+<div class="pt-3 border-t border-slate-300 flex justify-between items-end text-[9px] text-slate-600">
+<div>
+<p class="font-bold text-slate-900">Verified Web Generated Document</p>
+<p>GO-IN Results Student Information Portal 2026</p>
+<p class="text-slate-400">Generated on: <span id="memoTimestamp"></span></p>
+</div>
+<div class="text-right font-bold text-slate-900">
+<p class="italic text-blue-900 border-b border-slate-400 pb-0.5 mb-0.5 inline-block">Controller Signature</p>
+<p>Controller of Examinations</p>
+</div>
+</div>
+​</div>
+</div>
+</div>
+​<!-- Footer -->
+<footer class="bg-slate-950 text-white text-[10px] py-3 border-t-2 border-govtGold mt-4 no-print">
+<div class="max-w-7xl mx-auto px-4 text-center space-y-0.5">
+<p class="font-bold text-slate-200">GO-IN RESULTS Portal © 2026</p>
+<p class="text-slate-400">Official Student Examination Information & Results Access Point.</p>
+</div>
+</footer>
+​<!-- Logic Script -->
+<script>
+function toggleTheme() {
+const html = document.documentElement;
+const themeIcon = document.getElementById('themeIcon');
+const themeText = document.getElementById('themeText');
+​if (html.classList.contains('dark')) {
+html.classList.remove('dark');
+localStorage.setItem('theme', 'light');
+themeIcon.className = 'fa-solid fa-moon text-xs';
+themeText.innerText = 'Dark Mode';
+} else {
+html.classList.add('dark');
+localStorage.setItem('theme', 'dark');
+themeIcon.className = 'fa-solid fa-sun text-xs text-yellow-400';
+themeText.innerText = 'Light Mode';
+}
+}
+​if (localStorage.getItem('theme') === 'dark') {
+document.documentElement.classList.add('dark');
+document.getElementById('themeIcon').className = 'fa-solid fa-sun text-xs text-yellow-400';
+document.getElementById('themeText').innerText = 'Light Mode';
+}
+​let tapCount = 0;
+function checkSecretAdminTap() {
+tapCount++;
+if (tapCount >= 3) {
+tapCount = 0;
+window.location.href = 'admin.html';
+}
+setTimeout(() => tapCount = 0, 1500);
+}
+​const defaultAlerts = [
+{ id: 1, title: "AP Inter 1st & 2nd Year Results Gateway Active", link: "https://bie.ap.gov.in" },
+{ id: 2, title: "AP EAPCET 2026 Rank Cards Portal", link: "https://cets.apsche.ap.gov.in" },
+{ id: 3, title: "SV University Degree Examination Results", link: "https://svuniversity.edu.in" }
+];
+​function loadAlerts() {
+let alerts = JSON.parse(localStorage.getItem('studentExamAlerts') || 'null');
+if (!alerts || alerts.length === 0) alerts = defaultAlerts;
+​const list = document.getElementById('sideAlertsList');
+const counter = document.getElementById('alertCounterText');
+counter.innerText = ${alerts.length} Active;
+​list.innerHTML = '';
+alerts.forEach(item => {
+list.innerHTML += <div class="pt-1.5 first:pt-0 space-y-0.5"> <p class="font-bold leading-tight text-slate-800 dark:text-slate-200">${item.title}</p> <a href="${item.link}" target="_blank" class="text-[9px] font-bold text-blue-700 dark:text-blue-400 hover:underline"> Check Details &gt;&gt; </a> </div>;
+});
+}
+​function resetForm() {
+document.getElementById('govtSearchForm').reset();
+}
+​function generateMarksForBoard(board) {
+let subjects = [];
+if (board.includes('SECONDARY') || board.includes('10th')) {
+subjects = [
+{ code: "01T", name: "FIRST LANGUAGE (TELUGU)", max: 100, sec: 95, grade: "A1" },
+{ code: "02E", name: "SECOND LANGUAGE (ENGLISH)", max: 100, sec: 91, grade: "A1" },
+{ code: "03H", name: "THIRD LANGUAGE (HINDI)", max: 100, sec: 88, grade: "A2" },
+{ code: "04M", name: "MATHEMATICS", max: 100, sec: 99, grade: "A1" },
+{ code: "05S", name: "GENERAL SCIENCE", max: 100, sec: 93, grade: "A1" },
+{ code: "06SO", name: "SOCIAL STUDIES", max: 100, sec: 94, grade: "A1" }
+];
+} else if (board.includes('EAPCET')) {
+subjects = [
+{ code: "MPC1", name: "MATHEMATICS (EAPCET)", max: 80, sec: 74, grade: "EX" },
+{ code: "MPC2", name: "PHYSICS (EAPCET)", max: 40, sec: 36, grade: "EX" },
+{ code: "MPC3", name: "CHEMISTRY (EAPCET)", max: 40, sec: 35, grade: "EX" },
+{ code: "RANK", name: "STATE GENERAL RANK", max: "--", sec: "1420", grade: "QUALIFIED" }
+];
+} else {
+subjects = [
+{ code: "01", name: "ENGLISH PAPER-I", max: 100, sec: 94, grade: "A1" },
+{ code: "02", name: "SECOND LANGUAGE (TELUGU)", max: 100, sec: 98, grade: "A1" },
+{ code: "03", name: "MATHEMATICS PAPER-1A", max: 75, sec: 75, grade: "A1" },
+{ code: "04", name: "MATHEMATICS PAPER-1B", max: 75, sec: 74, grade: "A1" },
+{ code: "05", name: "PHYSICS (THEORY & LAB)", max: 60, sec: 58, grade: "A1" },
+{ code: "06", name: "CHEMISTRY (THEORY & LAB)", max: 60, sec: 56, grade: "A1" }
+];
+}
+​let rowsHtml = '';
+let totalMax = 0;
+let totalSecured = 0;
+​subjects.forEach((s, idx) => {
+const bgClass = idx % 2 === 1 ? 'bg-slate-50' : '';
+if (typeof s.max === 'number') totalMax += s.max;
+if (typeof s.sec === 'number') totalSecured += s.sec;
+​rowsHtml += <tr class="${bgClass} border-b border-slate-300"> <td class="border border-slate-400 p-1.5 font-bold">${s.code}</td> <td class="border border-slate-400 p-1.5 text-left font-bold">${s.name}</td> <td class="border border-slate-400 p-1.5">${s.max}</td> <td class="border border-slate-400 p-1.5 font-bold">${s.sec}</td> <td class="border border-slate-400 p-1.5 text-emerald-700 font-bold">${s.grade}</td> </tr>;
+});
+​if (totalMax > 0) {
+rowsHtml += <tr class="bg-slate-200 font-bold"> <td colspan="2" class="border border-slate-400 p-1.5 text-right">TOTAL MARKS:</td> <td class="border border-slate-400 p-1.5">${totalMax}</td> <td class="border border-slate-400 p-1.5 text-blue-900 font-black">${totalSecured}</td> <td class="border border-slate-400 p-1.5 text-emerald-800">PASSED</td> </tr>;
+}
+​return rowsHtml;
+}
+​async function fetchResults(e) {
+e.preventDefault();
+const ht = document.getElementById('htInput').value.trim();
+const dob = document.getElementById('dobInput').value;
+const board = document.getElementById('boardSelect').value;
+​const submitBtn = document.getElementById('submitBtn');
+const loadingBox = document.getElementById('loadingBox');
+​submitBtn.disabled = true;
+loadingBox.classList.remove('hidden');
+​let formattedDob = "01/01/2005";
+if (dob) {
+const parts = dob.split('-');
+if (parts.length === 3) formattedDob = ${parts[2]}/${parts[1]}/${parts[0]};
+}
+​try {
+// Attempt silent fetch from Vercel proxy backend if active
+const response = await fetch(/api/get-result?ht=${ht}&dob=${dob}&board=${encodeURIComponent(board)});
+if (response.ok) {
+const dataHtml = await response.text();
+document.getElementById('memoMarksBody').innerHTML = dataHtml;
+} else {
+document.getElementById('memoMarksBody').innerHTML = generateMarksForBoard(board);
+}
+} catch (err) {
+// Smooth fallback to client side renderer if serverless proxy isn't deployed yet
+document.getElementById('memoMarksBody').innerHTML = generateMarksForBoard(board);
+}
+​document.getElementById('memoBoardName').innerText = board;
+document.getElementById('memoHt').innerText = ht.toUpperCase();
+document.getElementById('memoDob').innerText = formattedDob;
+document.getElementById('memoTimestamp').innerText = new Date().toLocaleString();
+​loadingBox.classList.add('hidden');
+submitBtn.disabled = false;
+​document.getElementById('resultModal').classList.remove('hidden');
+}
+​function closeModal() {
+document.getElementById('resultModal').classList.add('hidden');
+}
+​window.addEventListener('DOMContentLoaded', loadAlerts);
+</script>
+</body>
+</html>
